@@ -35,7 +35,7 @@ const CONFIG = {
   voucherPrefix: 'AYA10',
 
   // optional: your Canva store URL for Back button
-  storeUrl: '#',
+  storeUrl: 'https://byggritningarna.se/aya-candle-boutique',
 
   // Formspree placeholder to remind user
   formspreePlaceholder: 'https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID'
