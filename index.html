@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Light AYA Candels</title>
+  <meta name="description" content="Light AYA Candels — tap falling candles to light them. Avoid bombs. Catch gift boxes for extra seconds." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="bg-stars" aria-hidden="true"></div>
+
+  <main class="app" id="app">
+    <!-- START SCREEN -->
+    <section class="screen screen--active" id="screenStart" aria-label="Start screen">
+      <div class="card hero-card">
+        <div class="cover">
+          <div class="cover__title">Light AYA Candels</div>
+          <div class="cover__subtitle">Space edition</div>
+
+          <!-- Decorative candles to make it feel like a game -->
+          <div class="cover__candles" aria-hidden="true">
+            <div class="cover__candle cover__candle--a"></div>
+            <div class="cover__candle cover__candle--b"></div>
+            <div class="cover__candle cover__candle--c"></div>
+          </div>
+        </div>
+
+        <h1 class="title">Light AYA Candels</h1>
+        <p class="subtitle">Light falling candels. Avoid litting bombs. Tap gift boxes for +time.</p>
+
+        <ul class="rules">
+          <li><strong>+1</strong> for each candel you light</li>
+          <li><strong>-5</strong> if you light a bomb</li>
+          <li>Gift boxes add <strong>+1 / +2 / +3</strong> seconds</li>
+          <li>Speed increases during the 60 seconds</li>
+        </ul>
+
+        <button class="btn btn--primary" id="btnStart">Start (60s)</button>
+        <button class="btn" id="btnHow">How it works</button>
+
+        <details class="small">
+          <summary>Vouchers & monthly giveaway</summary>
+          <p>
+            Vouchers are <strong>up to 10%</strong>. Submit your score at the end to join our monthly giveaway.
+          </p>
+        </details>
+
+        <div class="footer-note small">Play, submit your score, and you might win something extra.</div>
+        <div class="copyright small">© 2026 AYA Candels. All rights reserved.</div>
+      </div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section class="screen" id="screenGame" aria-label="Game screen">
+      <header class="hud">
+        <div class="hud__left">
+          <div class="hud__pill"><span class="hud__label">Time</span> <span id="hudTime">60</span>s</div>
+          <div class="hud__pill"><span class="hud__label">Score</span> <span id="hudScore">0</span></div>
+        </div>
+        <div class="hud__right">
+          <button class="icon-btn" id="btnPause" title="Pause">⏸</button>
+          <button class="icon-btn" id="btnQuit" title="Quit">✕</button>
+        </div>
+      </header>
+
+      <div class="game" id="game" aria-label="Game area">
+        <div class="game__fx" id="fxLayer" aria-hidden="true"></div>
+        <div class="game__objects" id="objLayer" aria-hidden="false"></div>
+
+        <!-- Matchstick anchored bottom -->
+        <div class="match" id="match" aria-hidden="true">
+          <div class="match__stick"></div>
+          <div class="match__flame" id="matchFlame"></div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- GAME OVER SCREEN -->
+    <section class="screen" id="screenOver" aria-label="Game over screen">
+      <div class="card">
+        <h2 class="title">Game Over</h2>
+        <p class="subtitle">Your final score:</p>
+        <div class="big-score" id="finalScore">0</div>
+
+        <div class="voucher">
+          <div class="voucher__label">Your voucher code (up to 10%):</div>
+          <div class="voucher__row">
+            <code class="voucher__code" id="voucherCode">AYA10-XXXXXX</code>
+            <button class="btn btn--small" id="btnCopyVoucher">Copy</button>
+          </div>
+          <div class="small">You can submit your score below to join the monthly winner draw.</div>
+        </div>
+
+        <div class="form-card">
+          <h3 class="form-title">Submit to enter monthly giveaway</h3>
+          <form id="scoreForm" method="POST" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID">
+            <div class="grid">
+              <label>
+                <span>Name</span>
+                <input name="name" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                <span>Email</span>
+                <input name="email" type="email" autocomplete="email" required />
+              </label>
+            </div>
+
+            <label>
+              <span>Message (optional)</span>
+              <textarea name="message" rows="3" placeholder="Anything you want to tell us..."></textarea>
+            </label>
+
+            <!-- Hidden fields filled by JS -->
+            <input type="hidden" name="game" value="Light AYA Candels" />
+            <input type="hidden" name="score" id="fieldScore" value="" />
+            <input type="hidden" name="voucher" id="fieldVoucher" value="" />
+            <input type="hidden" name="playedAt" id="fieldPlayedAt" value="" />
+            <input type="hidden" name="bestScoreLocal" id="fieldBestLocal" value="" />
+
+            <div class="row">
+              <button class="btn btn--primary" type="submit" id="btnSubmit">Send</button>
+              <button class="btn" type="button" id="btnPlayAgain">Play again</button>
+            </div>
+            <p class="small" id="formHint"></p>
+          </form>
+        </div>
+
+        <div class="row">
+          <a class="btn" id="btnBackToStore" href="#" target="_blank" rel="noopener">Back to store</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HELP MODAL -->
+    <div class="modal" id="modalHow" aria-hidden="true" role="dialog" aria-label="How to play">
+      <div class="modal__backdrop" data-close="true"></div>
+      <div class="modal__panel">
+        <div class="modal__header">
+          <div class="modal__title">How to play</div>
+          <button class="icon-btn" data-close="true" aria-label="Close">✕</button>
+        </div>
+        <div class="modal__body">
+          <p>
+            Tap falling <strong>candels</strong> to light them. Avoid tapping <strong>bombs</strong>.
+            Tap <strong>gift boxes</strong> to add extra seconds.
+          </p>
+          <ul>
+            <li>Candels: +1 score</li>
+            <li>Bombs: -5 score</li>
+            <li>Gifts: +1/+2/+3 seconds</li>
+          </ul>
+          <p class="small">Tip: It’s easier if you tap quickly—speed increases as time passes.</p>
+        </div>
+        <div class="modal__footer">
+          <button class="btn btn--primary" data-close="true">Got it</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/game.js"></script>
+</body>
+</html>
